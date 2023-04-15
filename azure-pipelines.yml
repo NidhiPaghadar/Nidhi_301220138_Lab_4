@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  name: 'NIDHI'
+  name: 'COMP367-Nidhi-Windows'
 
 variables:
   solution: '**/*.sln'
