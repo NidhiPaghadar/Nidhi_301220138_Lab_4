@@ -13,6 +13,12 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  Major: '1'
+  Minor: '0'
+  revision: $[counter(variables['Minor'], 1)]
+  nugetVersion: '$(Major).$(Minor).$(revision)'
+  nugetProjectName: 'Nidhi_301220138_Lab_4'
+
 
 steps:
 - task: NuGetToolInstaller@1
@@ -28,7 +34,13 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+- task: DotNetCoreCLI@2
+  displayName: 'Create Nuget Package'
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'pack'
+    packagesToPack: '**/$(nugetProjectName).csproj'
+    versioningScheme: 'byEnvVar'
+    versionEnvVar: 'nugetVersion'
+    nobuild: true
+    outputDir: '$(Build.ArtifactStagingDirectory)'
+    arguments: '--configuration $(buildConfiguration) /p:PackageVersion=$(nugetVersion)'
